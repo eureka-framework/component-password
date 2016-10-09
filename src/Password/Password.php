@@ -13,7 +13,6 @@ namespace Eureka\Component\Password;
  * Wrapper class for password_* php functions from
  *
  * @author Romain Cottard
- * @version 2.0.0
  */
 class Password
 {
@@ -40,11 +39,11 @@ class Password
     /**
      * Generate password of given length.
      *
-     * @param  int $length
-     * @param  float $alpha   % alphabetic chars.
+     * @param  int   $length
+     * @param  float $alpha % alphabetic chars.
      * @param  float $numeric % of numeric chars
-     * @param  float $other   % of other chars
-     * @return $this
+     * @param  float $other % of other chars
+     * @return self
      */
     public function generate($length = 16, $alpha = 0.6, $numeric = 0.2, $other = 0.2)
     {
@@ -63,7 +62,7 @@ class Password
 
         //~ Alphabetic characters
         for ($index = 0, $max = ceil($numeric * $length); $index < $max; $index++) {
-            $char = rand(48, 57); // Number
+            $char    = rand(48, 57); // Number
             $chars[] = chr($char);
         }
 
@@ -119,18 +118,20 @@ class Password
     /**
      * Hash the password.
      *
-     * @return $this
+     * @return self
      */
     public function hash()
     {
         $this->passwordHashed = password_hash($this->password, PASSWORD_DEFAULT);
+
+        return $this;
     }
 
     /**
      * Verify the current password compared to the given hash.
      *
      * @param  string $passwordHashed
-     * @return mixed
+     * @return bool
      */
     public function verify($passwordHashed)
     {
