@@ -14,8 +14,12 @@
 
   "autoload": {
     "psr-4": {
-      "Eureka\\Component\\Password\\": "./src/Password/"
+      "Eureka\\Component\\Password\\": "./src"
     }
-  }
+  },
+
+  "require": {
+    "ircmaxell/random-lib": "^1.2.0"
+  },
 
 }
