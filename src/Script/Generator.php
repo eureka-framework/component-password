@@ -9,11 +9,7 @@
 
 namespace Eureka\Component\Password\Script;
 
-use Eureka\Component\Config\Config;
-use Eureka\Component\Orm\Generator\Generator as GeneratorService;
-use Eureka\Component\Orm\Config\Config as OrmConfig;
 use Eureka\Component\Password\Password;
-use Eureka\Component\Password\PasswordGenerator;
 use Eureka\Eurekon;
 
 /**
@@ -40,10 +36,10 @@ class Generator extends Eurekon\AbstractScript
     {
         $help = new Eurekon\Help('...');
         $help->addArgument('g', 'generate', 'Generate password', false, false);
-        $help->addArgument('l' ,'length', 'Password length', true, false);
-        $help->addArgument('a' ,'ratio-alpha', 'Alphabetic latin characters ratio', true, false);
-        $help->addArgument('n' ,'ratio-numeric', 'Numeric characters ratio', true, false);
-        $help->addArgument('o' ,'ratio-other', 'Other characters ratio', true, false);
+        $help->addArgument('l', 'length', 'Password length', true, false);
+        $help->addArgument('a', 'ratio-alpha', 'Alphabetic latin characters ratio', true, false);
+        $help->addArgument('n', 'ratio-numeric', 'Numeric characters ratio', true, false);
+        $help->addArgument('o', 'ratio-other', 'Other characters ratio', true, false);
 
         $help->display();
     }
@@ -56,7 +52,6 @@ class Generator extends Eurekon\AbstractScript
         $argument = Eurekon\Argument\Argument::getInstance();
 
         $doGenerate = $argument->has('generate');
-
 
         $password = new Password();
         if ($doGenerate) {

@@ -9,8 +9,6 @@
 
 namespace Eureka\Component\Password;
 
-use RandomLib;
-
 /**
  * Wrapper class for password_* php functions.
  * Can also generate a password
@@ -30,7 +28,7 @@ class Password
      *
      * @param string $password
      */
-    public function __construct($password = '')
+    public function __construct(string $password = '')
     {
         $this->password = $password;
     }
@@ -44,10 +42,10 @@ class Password
      * @param  float $other   % of other chars
      * @return $this
      */
-    public function generate($length = 16, $alpha = 0.6, $numeric = 0.2, $other = 0.2)
+    public function generate(int $length = 16, float $alpha = 0.6, float $numeric = 0.2, float $other = 0.2): self
     {
         $generator = new PasswordGenerator(
-            (new RandomLib\Factory())->getMediumStrengthGenerator(),
+            new StringGenerator(),
             $length,
             $alpha,
             $numeric,
@@ -64,7 +62,7 @@ class Password
      *
      * @return string
      */
-    public function getPlain()
+    public function getPlain(): string
     {
         return $this->password;
     }
@@ -75,7 +73,7 @@ class Password
      * @param  string $password
      * @return $this
      */
-    public function setPlain($password)
+    public function setPlain($password): self
     {
         $this->password = $password;
 
@@ -87,7 +85,7 @@ class Password
      *
      * @return string
      */
-    public function getHash()
+    public function getHash(): string
     {
         return $this->passwordHashed;
     }
@@ -98,7 +96,7 @@ class Password
      * @return $this
      * @throws \RuntimeException
      */
-    public function hash()
+    public function hash(): self
     {
         $this->passwordHashed = password_hash($this->password, PASSWORD_BCRYPT);
 
@@ -115,7 +113,7 @@ class Password
      * @param  string $passwordHashed
      * @return bool
      */
-    public function verify($passwordHashed)
+    public function verify(string $passwordHashed): bool
     {
         return password_verify($this->password, $passwordHashed);
     }

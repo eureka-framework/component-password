@@ -9,17 +9,14 @@
 
 namespace Eureka\Component\Password;
 
-use RandomLib\Generator;
-
 /**
  * Password generator class.
  *
- * @author Benoit Burnichon
  * @author Romain Cottard
  */
 class PasswordGenerator
 {
-    /** @var \RandomLib\Generator $generator */
+    /** @var StringGenerator $generator */
     private $generator;
 
     /** @var int $length Password length */
@@ -37,13 +34,13 @@ class PasswordGenerator
     /**
      * PasswordGenerator constructor.
      *
-     * @param \RandomLib\Generator $generator
+     * @param StringGenerator $generator
      * @param int   $length
      * @param float $alpha
      * @param float $numeric
      * @param float $other
      */
-    public function __construct(Generator $generator, $length = 16, $alpha = 0.6, $numeric = 0.2, $other = 0.2)
+    public function __construct(StringGenerator $generator, $length = 16, $alpha = 0.6, $numeric = 0.2, $other = 0.2)
     {
         $this->generator = $generator;
 
@@ -60,26 +57,25 @@ class PasswordGenerator
     /**
      * Generate string based on settings from constructor.
      *
+     * @param bool $removeAmbiguousChars
      * @return string
      */
-    public function generate()
+    public function generate(bool $removeAmbiguousChars = true): string
     {
         $chars = '';
 
         $weight = $this->length / ($this->alpha + $this->numeric + $this->other);
 
-        $generator = $this->generator;
-
         if ($this->alpha > 0) {
-            $chars .= $generator->generateString((int) ceil($this->alpha * $weight), Generator::CHAR_ALPHA);
+            $chars .= $this->generator->generate((int) ceil($this->alpha * $weight), StringGenerator::CHAR_ALPHA, $removeAmbiguousChars);
         }
 
         if ($this->numeric > 0) {
-            $chars .= $generator->generateString((int) ceil($this->numeric * $weight), Generator::CHAR_DIGITS);
+            $chars .= $this->generator->generate((int) ceil($this->numeric * $weight), StringGenerator::CHAR_DIGITS, $removeAmbiguousChars);
         }
 
         if ($this->other > 0) {
-            $chars .= $generator->generateString((int) ceil($this->other * $weight), Generator::CHAR_SYMBOLS);
+            $chars .= $this->generator->generate((int) ceil($this->other * $weight), StringGenerator::CHAR_SYMBOLS, $removeAmbiguousChars);
         }
 
         return substr($this->secureShuffle($chars), 0, $this->length);
@@ -91,16 +87,17 @@ class PasswordGenerator
      * @see    https://en.wikipedia.org/wiki/Fisher–Yates_shuffle
      * @param  string $chars
      * @return string
+     * @throws
      */
     private function secureShuffle($chars)
     {
         for ($i = strlen($chars) - 1; $i >= 1; --$i) {
-            $j = $this->generator->generateInt(0, $i);
+            $j = random_int(0, $i);
 
             // Exchange i and j characters
-            $temp      = $chars{$j};
-            $chars{$j} = $chars{$i};
-            $chars{$i} = $temp;
+            $temp      = $chars[$j];
+            $chars[$j] = $chars[$i];
+            $chars[$i] = $temp;
         }
 
         return $chars;
