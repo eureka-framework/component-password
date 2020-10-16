@@ -14,8 +14,12 @@
 
   "autoload": {
     "psr-4": {
-      "Eureka\\Component\\Password\\": "./src/Password/"
+      "Eureka\\Component\\Password\\": "./src"
     }
+  },
+
+  "require": {
+    "php": ">=7.2"
   }
 
 }
