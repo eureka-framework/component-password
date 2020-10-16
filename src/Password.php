@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Eureka\Component\Password;
 
 /**
@@ -18,9 +20,9 @@ namespace Eureka\Component\Password;
 class Password
 {
     /** @var string $password Plain text password */
-    protected $password = '';
+    protected string $password = '';
 
-    /** @var string $passwordHashed Hashed password */
+    /** @var string|null|bool $passwordHashed Hashed password */
     protected $passwordHashed = '';
 
     /**
@@ -28,33 +30,11 @@ class Password
      *
      * @param string $password
      */
-    public function __construct(string $password = '')
+    public function __construct(string $password)
     {
         $this->password = $password;
-    }
 
-    /**
-     * Generate password of given length.
-     *
-     * @param  int $length
-     * @param  float $alpha   % alphabetic chars.
-     * @param  float $numeric % of numeric chars
-     * @param  float $other   % of other chars
-     * @return $this
-     */
-    public function generate(int $length = 16, float $alpha = 0.6, float $numeric = 0.2, float $other = 0.2): self
-    {
-        $generator = new PasswordGenerator(
-            new StringGenerator(),
-            $length,
-            $alpha,
-            $numeric,
-            $other
-        );
-
-        $this->password = $generator->generate();
-
-        return $this;
+        $this->hash();
     }
 
     /**
@@ -65,19 +45,6 @@ class Password
     public function getPlain(): string
     {
         return $this->password;
-    }
-
-    /**
-     * Set plain text password.
-     *
-     * @param  string $password
-     * @return $this
-     */
-    public function setPlain($password): self
-    {
-        $this->password = $password;
-
-        return $this;
     }
 
     /**
@@ -101,7 +68,7 @@ class Password
         $this->passwordHashed = password_hash($this->password, PASSWORD_BCRYPT);
 
         if (false === $this->passwordHashed) {
-            throw new \RuntimeException('Cannot hash password!');
+            throw new \RuntimeException('Cannot hash password!'); // @codeCoverageIgnore
         }
 
         return $this;

@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Eureka\Component\Password;
 
 /**
@@ -17,68 +19,90 @@ namespace Eureka\Component\Password;
 class PasswordGenerator
 {
     /** @var StringGenerator $generator */
-    private $generator;
+    private StringGenerator $generator;
 
     /** @var int $length Password length */
-    private $length;
+    private int $length;
 
     /** @var float $alpha Ratio of alphabetic characters */
-    private $alpha;
+    private float $alpha;
 
     /** @var float $numeric Ratio of numeric characters */
-    private $numeric;
+    private float $numeric;
 
-    /** @var float $numeric Ratio of others characters */
-    private $other;
+    /** @var float $other Ratio of others characters */
+    private float $other;
 
     /**
      * PasswordGenerator constructor.
      *
      * @param StringGenerator $generator
+     */
+    public function __construct(
+        StringGenerator $generator
+    ) {
+        $this->generator = $generator;
+    }
+
+    /**
+     * Generate password of given length.
+     *
      * @param int   $length
      * @param float $alpha
      * @param float $numeric
      * @param float $other
+     * @param bool $removeAmbiguousChars
+     * @return Password
      */
-    public function __construct(StringGenerator $generator, $length = 16, $alpha = 0.6, $numeric = 0.2, $other = 0.2)
-    {
-        $this->generator = $generator;
-
-        $this->length  = (int) $length;
-        $this->alpha   = (float) $alpha;
-        $this->numeric = (float) $numeric;
-        $this->other   = (float) $other;
-
-        if ($this->length <= 0 || $this->alpha < 0 || $this->numeric < 0 || $this->other < 0 || ($this->alpha + $this->numeric + $this->other) < 0.5) {
-            throw new \InvalidArgumentException('One of the argument is negative or sum of weights is close to null');
-        }
+    public function generate(
+        int $length = 16,
+        float $alpha = 0.6,
+        float $numeric = 0.2,
+        float $other = 0.2,
+        bool $removeAmbiguousChars = true
+    ): Password {
+        return new Password($this->generateString($length, $alpha, $numeric, $other, $removeAmbiguousChars));
     }
 
     /**
      * Generate string based on settings from constructor.
      *
+     * @param int   $length
+     * @param float $alpha
+     * @param float $numeric
+     * @param float $other
      * @param bool $removeAmbiguousChars
      * @return string
      */
-    public function generate(bool $removeAmbiguousChars = true): string
-    {
+    public function generateString(
+        int $length = 16,
+        float $alpha = 0.6,
+        float $numeric = 0.2,
+        float $other = 0.2,
+        bool $removeAmbiguousChars = true
+    ): string {
+
+        if ($length <= 0 || $alpha < 0 || $numeric < 0 || $other < 0 || ($alpha + $numeric + $other) < 0.5) {
+            throw new \InvalidArgumentException('One of the argument is negative or sum of weights is close to null');
+        }
+
         $chars = '';
 
-        $weight = $this->length / ($this->alpha + $this->numeric + $this->other);
+        $weight = $length / ($alpha + $numeric + $other);
 
-        if ($this->alpha > 0) {
-            $chars .= $this->generator->generate((int) ceil($this->alpha * $weight), StringGenerator::CHAR_ALPHA, $removeAmbiguousChars);
+        if ($alpha > 0) {
+            $chars .= $this->generator->generate((int) ceil($alpha * $weight), StringGenerator::CHAR_ALPHA, $removeAmbiguousChars);
         }
 
-        if ($this->numeric > 0) {
-            $chars .= $this->generator->generate((int) ceil($this->numeric * $weight), StringGenerator::CHAR_DIGITS, $removeAmbiguousChars);
+        if ($numeric > 0) {
+            $chars .= $this->generator->generate((int) ceil($numeric * $weight), StringGenerator::CHAR_DIGITS, $removeAmbiguousChars);
         }
 
-        if ($this->other > 0) {
-            $chars .= $this->generator->generate((int) ceil($this->other * $weight), StringGenerator::CHAR_SYMBOLS, $removeAmbiguousChars);
+        if ($other > 0) {
+            $chars .= $this->generator->generate((int) ceil($other * $weight), StringGenerator::CHAR_SYMBOLS, $removeAmbiguousChars);
         }
 
-        return substr($this->secureShuffle($chars), 0, $this->length);
+        return substr($this->secureShuffle($chars), 0, $length);
     }
 
     /**
@@ -89,7 +113,7 @@ class PasswordGenerator
      * @return string
      * @throws
      */
-    private function secureShuffle($chars)
+    private function secureShuffle(string $chars)
     {
         for ($i = strlen($chars) - 1; $i >= 1; --$i) {
             $j = random_int(0, $i);

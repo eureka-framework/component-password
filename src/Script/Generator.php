@@ -9,16 +9,20 @@
 
 namespace Eureka\Component\Password\Script;
 
+use Eureka\Component\Console;
 use Eureka\Component\Password\Password;
-use Eureka\Eurekon;
+use Eureka\Component\Password\PasswordGenerator;
+use Eureka\Component\Password\StringGenerator;
 
 /**
  * Console Abstraction class.
  * Must be parent class for every console script class.
  *
  * @author  Romain Cottard
+ *
+ * @codeCoverageIgnore
  */
-class Generator extends Eurekon\AbstractScript
+class Generator extends Console\AbstractScript
 {
     /**
      * Generator constructor.
@@ -30,11 +34,11 @@ class Generator extends Eurekon\AbstractScript
     }
 
     /**
-     * {@inheritdoc}
+     * @return void
      */
-    public function help()
+    public function help(): void
     {
-        $help = new Eurekon\Help('...');
+        $help = new Console\Help('...');
         $help->addArgument('g', 'generate', 'Generate password', false, false);
         $help->addArgument('l', 'length', 'Password length', true, false);
         $help->addArgument('a', 'ratio-alpha', 'Alphabetic latin characters ratio', true, false);
@@ -45,35 +49,33 @@ class Generator extends Eurekon\AbstractScript
     }
 
     /**
-     * {@inheritdoc}
+     * @return void
      */
-    public function run()
+    public function run(): void
     {
-        $argument = Eurekon\Argument\Argument::getInstance();
+        $argument = Console\Argument\Argument::getInstance();
 
-        $doGenerate = $argument->has('generate');
+        $doGenerate = $argument->has('generate', 'g');
 
-        $password = new Password();
         if ($doGenerate) {
             $length  = $argument->get('l', 'length', 16);
             $alpha   = $argument->get('a', 'ratio-alpha', 0.6);
             $numeric = $argument->get('n', 'ratio-numeric', 0.2);
             $other   = $argument->get('o', 'ratio-other', 0.2);
-            $password->generate($length, $alpha, $numeric, $other);
+            $password = (new PasswordGenerator(new StringGenerator(), $length, $alpha, $numeric, $other))->generate();
         } else {
-            Eurekon\IO\Out::std('Type your password: ', '');
+            Console\IO\Out::std('Type your password: ', '');
             $plain = trim(fgets(STDIN));
             if (empty($plain)) {
                 throw new \RuntimeException('Empty password');
             }
-            $password->setPlain($plain);
+            $password = new Password($plain);
         }
 
         $password->hash();
 
-        Eurekon\IO\Out::std('');
-        Eurekon\IO\Out::std('Plain: ' . $password->getPlain());
-        Eurekon\IO\Out::std('Hash:  ' . $password->getHash());
+        Console\IO\Out::std('');
+        Console\IO\Out::std('Plain: ' . $password->getPlain());
+        Console\IO\Out::std('Hash:  ' . $password->getHash());
     }
-
 }

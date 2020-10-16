@@ -17,9 +17,25 @@
       "Eureka\\Component\\Password\\": "./src"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Eureka\\Component\\Password\\Tests\\": "./tests"
+    }
+  },
 
   "require": {
-    "php": ">=7.2"
+    "php": ">=7.4.0",
+
+    "eureka/component-console": "@dev"
+  },
+
+  "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "^v0.6",
+    "phpcompatibility/php-compatibility": "^9.3",
+    "phpunit/phpcov": "^8.2.0",
+    "phpunit/phpunit": "^9.4.0",
+    "squizlabs/php_codesniffer": "^3.5",
+    "symfony/cache": "^v5.1"
   }
 
 }
