@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [4.0.0] - 2020 (unreleased)
 ### Changed
  * New require PHP 7.4+
+ * Move some code outside Password class
+ * Generator parameters are now on generate method
 ### Added
  * Added tests
  * Set up CI
