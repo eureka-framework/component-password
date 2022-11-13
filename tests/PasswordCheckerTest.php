@@ -24,7 +24,7 @@ class PasswordCheckerTest extends TestCase
     /**
      * @return void
      */
-    public function testICanVerifyAValidPassword()
+    public function testICanVerifyAValidPassword(): void
     {
         $passwordChecker = new PasswordChecker();
         $passwordHash    = $this->retrieveSomeHashedPasswordFromSomewhere();
@@ -36,7 +36,7 @@ class PasswordCheckerTest extends TestCase
     /**
      * @return void
      */
-    public function testICannotVerifyAnInvalidPassword()
+    public function testICannotVerifyAnInvalidPassword(): void
     {
         $passwordChecker = new PasswordChecker();
         $passwordHash    = $this->retrieveSomeHashedPasswordFromSomewhere();
@@ -45,11 +45,8 @@ class PasswordCheckerTest extends TestCase
         $this->assertFalse($passwordChecker->verify($passwordPlain, $passwordHash));
     }
 
-    /**
-     * @return string
-     */
     private function retrieveSomeHashedPasswordFromSomewhere(): string
     {
-        return password_hash('SomeSecretPassword1!', PASSWORD_BCRYPT);
+        return (string) password_hash('SomeSecretPassword1!', PASSWORD_BCRYPT);
     }
 }

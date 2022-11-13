@@ -18,26 +18,8 @@ namespace Eureka\Component\Password;
  */
 class PasswordGenerator
 {
-    /** @var StringGenerator $generator */
     private StringGenerator $generator;
 
-    /** @var int $length Password length */
-    private int $length;
-
-    /** @var float $alpha Ratio of alphabetic characters */
-    private float $alpha;
-
-    /** @var float $numeric Ratio of numeric characters */
-    private float $numeric;
-
-    /** @var float $other Ratio of others characters */
-    private float $other;
-
-    /**
-     * PasswordGenerator constructor.
-     *
-     * @param StringGenerator $generator
-     */
     public function __construct(
         StringGenerator $generator
     ) {
@@ -47,12 +29,13 @@ class PasswordGenerator
     /**
      * Generate password of given length.
      *
-     * @param int   $length
+     * @param int $length
      * @param float $alpha
      * @param float $numeric
      * @param float $other
      * @param bool $removeAmbiguousChars
      * @return Password
+     * @throws \Exception
      */
     public function generate(
         int $length = 16,
@@ -67,12 +50,13 @@ class PasswordGenerator
     /**
      * Generate string based on settings from constructor.
      *
-     * @param int   $length
+     * @param int $length
      * @param float $alpha
      * @param float $numeric
      * @param float $other
      * @param bool $removeAmbiguousChars
      * @return string
+     * @throws \Exception
      */
     public function generateString(
         int $length = 16,
@@ -91,15 +75,27 @@ class PasswordGenerator
         $weight = $length / ($alpha + $numeric + $other);
 
         if ($alpha > 0) {
-            $chars .= $this->generator->generate((int) ceil($alpha * $weight), StringGenerator::CHAR_ALPHA, $removeAmbiguousChars);
+            $chars .= $this->generator->generate(
+                (int) ceil($alpha * $weight),
+                StringGenerator::CHAR_ALPHA,
+                $removeAmbiguousChars
+            );
         }
 
         if ($numeric > 0) {
-            $chars .= $this->generator->generate((int) ceil($numeric * $weight), StringGenerator::CHAR_DIGITS, $removeAmbiguousChars);
+            $chars .= $this->generator->generate(
+                (int) ceil($numeric * $weight),
+                StringGenerator::CHAR_DIGITS,
+                $removeAmbiguousChars
+            );
         }
 
         if ($other > 0) {
-            $chars .= $this->generator->generate((int) ceil($other * $weight), StringGenerator::CHAR_SYMBOLS, $removeAmbiguousChars);
+            $chars .= $this->generator->generate(
+                (int) ceil($other * $weight),
+                StringGenerator::CHAR_SYMBOLS,
+                $removeAmbiguousChars
+            );
         }
 
         return substr($this->secureShuffle($chars), 0, $length);
@@ -111,9 +107,8 @@ class PasswordGenerator
      * @see    https://en.wikipedia.org/wiki/Fisher–Yates_shuffle
      * @param  string $chars
      * @return string
-     * @throws
      */
-    private function secureShuffle(string $chars)
+    private function secureShuffle(string $chars): string
     {
         for ($i = strlen($chars) - 1; $i >= 1; --$i) {
             $j = random_int(0, $i);

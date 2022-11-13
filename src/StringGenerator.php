@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) Romain Cottard
+ * Copyright (c) Deezer
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -20,19 +20,19 @@ namespace Eureka\Component\Password;
  */
 class StringGenerator
 {
-    /** @const Bit for uppercase letters */
+    /** @const A Bit for uppercase letters */
     const CHAR_UPPER = 1;
 
-    /** @const Bit for lowercase letters */
+    /** @const A Bit for lowercase letters */
     const CHAR_LOWER = 2;
 
     /** @const Bits (sum) for alpha characters (combines UPPER + LOWER) */
     const CHAR_ALPHA = 3; // CHAR_UPPER | CHAR_LOWER
 
-    /** @const Bit for digits */
+    /** @const A Bit for digits */
     const CHAR_DIGITS = 4;
 
-    /** @const Bits (sum) for alpha numeric characters */
+    /** @const Bits (sum) for alphanumeric characters */
     const CHAR_ALNUM = 7; // CHAR_ALPHA | CHAR_DIGITS
 
     /** @const Bits (sum) for uppercase hexadecimal symbols */
@@ -44,13 +44,13 @@ class StringGenerator
     /** @const Bits (sum) for base64 symbols */
     const CHAR_BASE64 = 39; // 32 | CHAR_ALNUM
 
-    /** @const Bit for additional symbols accessible via the keyboard */
+    /** @const A Bit for additional symbols accessible via the keyboard */
     const CHAR_SYMBOLS = 64;
 
-    /** @const Bit for brackets */
+    /** @const A Bit for brackets */
     const CHAR_BRACKETS = 128;
 
-    /** @const Bit for punctuation marks */
+    /** @const A Bit for punctuation marks */
     const CHAR_PUNCT = 256;
 
     /** @const Bitwise for upper/lower-case and digits but without "B8G6I1l|0OQDS5Z2" */
@@ -60,7 +60,7 @@ class StringGenerator
     private const AMBIGUOUS_CHARS = 'B8G6I1l|0OQDS5Z2()[]{}:;,.';
 
     /**
-     * @var array The different characters, by Flag
+     * @var string[] The different characters, by Flag
      */
     const STRING_LIST = [
         self::CHAR_UPPER     => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
@@ -79,7 +79,7 @@ class StringGenerator
      * @param int $flags
      * @param bool $removeAmbiguousChars
      * @return string
-     * @throws
+     * @throws \Exception
      */
     public function generate(int $length, int $flags = self::CHAR_BASE64, bool $removeAmbiguousChars = true): string
     {
@@ -90,11 +90,12 @@ class StringGenerator
      * @param int $length
      * @param string $chars
      * @return string
-     * @throws
+     * @throws \Exception
      */
     public function generateFromChars(int $length, string $chars): string
     {
-        $max    = mb_strlen($chars) - 1;
+        /** @var int<0,max> $max */
+        $max    = max(((int) mb_strlen($chars)) - 1, 0); // Min 0, to avoid \Error when $max is -1
         $string = '';
 
         for ($i = 0; $i < $length; $i++) {
@@ -126,6 +127,6 @@ class StringGenerator
         }
 
         //~ Return string with unique chars
-        return count_chars($string, 3);
+        return (string) count_chars($string, 3);
     }
 }

@@ -30,7 +30,7 @@ class Generator extends Console\AbstractScript
     public function __construct()
     {
         $this->setDescription('Password generator');
-        $this->setExecutable(true);
+        $this->setExecutable();
     }
 
     /**
@@ -38,18 +38,19 @@ class Generator extends Console\AbstractScript
      */
     public function help(): void
     {
-        $help = new Console\Help('...');
-        $help->addArgument('g', 'generate', 'Generate password', false, false);
-        $help->addArgument('l', 'length', 'Password length', true, false);
-        $help->addArgument('a', 'ratio-alpha', 'Alphabetic latin characters ratio', true, false);
-        $help->addArgument('n', 'ratio-numeric', 'Numeric characters ratio', true, false);
-        $help->addArgument('o', 'ratio-other', 'Other characters ratio', true, false);
-
-        $help->display();
+        (new Console\Help('...'))
+            ->addArgument('g', 'generate', 'Generate password')
+            ->addArgument('l', 'length', 'Password length', true)
+            ->addArgument('a', 'ratio-alpha', 'Alphabetic latin characters ratio', true)
+            ->addArgument('n', 'ratio-numeric', 'Numeric characters ratio', true)
+            ->addArgument('o', 'ratio-other', 'Other characters ratio', true)
+            ->display()
+        ;
     }
 
     /**
      * @return void
+     * @throws \Exception
      */
     public function run(): void
     {
@@ -58,14 +59,14 @@ class Generator extends Console\AbstractScript
         $doGenerate = $argument->has('generate', 'g');
 
         if ($doGenerate) {
-            $length  = $argument->get('l', 'length', 16);
-            $alpha   = $argument->get('a', 'ratio-alpha', 0.6);
-            $numeric = $argument->get('n', 'ratio-numeric', 0.2);
-            $other   = $argument->get('o', 'ratio-other', 0.2);
-            $password = (new PasswordGenerator(new StringGenerator(), $length, $alpha, $numeric, $other))->generate();
+            $length  = (int) $argument->get('l', 'length', 16);
+            $alpha   = (float) $argument->get('a', 'ratio-alpha', 0.6);
+            $numeric = (float) $argument->get('n', 'ratio-numeric', 0.2);
+            $other   = (float) $argument->get('o', 'ratio-other', 0.2);
+            $password = (new PasswordGenerator(new StringGenerator()))->generate($length, $alpha, $numeric, $other);
         } else {
             Console\IO\Out::std('Type your password: ', '');
-            $plain = trim(fgets(STDIN));
+            $plain = trim((string) fgets(STDIN));
             if (empty($plain)) {
                 throw new \RuntimeException('Empty password');
             }

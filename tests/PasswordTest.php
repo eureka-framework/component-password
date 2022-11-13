@@ -21,39 +21,27 @@ use PHPUnit\Framework\TestCase;
  */
 class PasswordTest extends TestCase
 {
-    /**
-     * @return void
-     */
-    public function testICanInstantiatePasswordClass()
+    public function testICanInstantiatePasswordClass(): void
     {
         $password = new Password('SomeSecretPassword1!');
 
         $this->assertInstanceOf(Password::class, $password);
     }
 
-    /**
-     * @return void
-     */
-    public function testICanRetrievePlainPasswordFromPasswordInstance()
+    public function testICanRetrievePlainPasswordFromPasswordInstance(): void
     {
         $password = new Password('SomeSecretPassword1!');
 
         $this->assertSame('SomeSecretPassword1!', $password->getPlain());
     }
 
-    /**
-     * @return void
-     */
-    public function testICanRetrieveHashedPasswordFromPasswordInstance()
+    public function testICanRetrieveHashedPasswordFromPasswordInstance(): void
     {
         $password = new Password('SomeSecretPassword1!');
 
-        $this->assertTrue(!empty($password->getHash()));
+        $this->assertNotEmpty($password->getHash());
     }
 
-    /**
-     * @return void
-     */
     public function testICanVerifyAValidPassword(): void
     {
         $originalPasswordHash = $this->retrieveSomeHashedPasswordFromSomewhere();
@@ -63,9 +51,6 @@ class PasswordTest extends TestCase
         $this->assertTrue($correctPasswordToVerify->verify($originalPasswordHash));
     }
 
-    /**
-     * @return void
-     */
     public function testICannotVerifyAnInvalidPassword(): void
     {
         $originalPasswordHash = $this->retrieveSomeHashedPasswordFromSomewhere();
@@ -75,11 +60,8 @@ class PasswordTest extends TestCase
         $this->assertFalse($incorrectPasswordToVerify->verify($originalPasswordHash));
     }
 
-    /**
-     * @return string
-     */
     private function retrieveSomeHashedPasswordFromSomewhere(): string
     {
-        return password_hash('SomeSecretPassword1!', PASSWORD_BCRYPT);
+        return (string) password_hash('SomeSecretPassword1!', PASSWORD_BCRYPT);
     }
 }

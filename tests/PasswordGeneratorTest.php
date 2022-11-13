@@ -21,20 +21,14 @@ use PHPUnit\Framework\TestCase;
  */
 class PasswordGeneratorTest extends TestCase
 {
-    /**
-     * @return void
-     */
-    public function testGeneratorThrowAnExceptionWhenConstructorParametersAreWrong()
+    public function testGeneratorThrowAnExceptionWhenConstructorParametersAreWrong(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $generator = new Password\PasswordGenerator(new Password\StringGenerator());
         $generator->generate(8, 0.1, 0.1, -1.0);
     }
 
-    /**
-     * @return void
-     */
-    public function testItGeneratePasswordOfExpectedLength()
+    public function testItGeneratePasswordOfExpectedLength(): void
     {
         $generator = new Password\PasswordGenerator(new Password\StringGenerator());
         $password  = $generator->generate(8);
@@ -42,10 +36,7 @@ class PasswordGeneratorTest extends TestCase
         self::assertEquals(8, mb_strlen($password->getPlain()));
     }
 
-    /**
-     * @return void
-     */
-    public function testItGeneratePasswordWithOnlyAlphaCharacters()
+    public function testItGeneratePasswordWithOnlyAlphaCharacters(): void
     {
         $generator = new Password\PasswordGenerator(new Password\StringGenerator());
         $password  = $generator->generate(8, 1.0, 0.0, 0.0);
@@ -56,10 +47,7 @@ class PasswordGeneratorTest extends TestCase
         }
     }
 
-    /**
-     * @return void
-     */
-    public function testItGeneratePasswordWithOnlyNumericCharacters()
+    public function testItGeneratePasswordWithOnlyNumericCharacters(): void
     {
         $generator = new Password\PasswordGenerator(new Password\StringGenerator());
         $password  = $generator->generate(8, 0.0, 1.0, 0.0);
@@ -70,10 +58,7 @@ class PasswordGeneratorTest extends TestCase
         }
     }
 
-    /**
-     * @return void
-     */
-    public function testItGeneratePasswordWithoutAlphaNumericCharacters()
+    public function testItGeneratePasswordWithoutAlphaNumericCharacters(): void
     {
         $generator = new Password\PasswordGenerator(new Password\StringGenerator());
         $password  = $generator->generate(8, 0.0, 0.0, 1.0);
