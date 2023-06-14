@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ```
 ## [tag] - YYYY-MM-DD
-[tag]: https://github.com/eureka-framework/component-deployer/compare/1.3.0...master
+[tag]: https://github.com/eureka-framework/component-passwprd/compare/4.2.0...master
 ### Changed
  - Change 1
 ### Added
@@ -16,6 +16,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ```
 ----
 
+
+## [4.2.0] - 2023-06-14
+[4.2.0]: https://github.com/eureka-framework/component-passwprd/compare/4.1.0...4.2.0
+### Changed
+- Now compatible with PHP 8.2
+- Update Makefile
+- Update composer.json
+- Update GitHub workflow
+### Added
+- Add phpstan config for PHP 8.2 compatibility
 
 ## [4.1.0] - 2022-11-13
 ### Added
