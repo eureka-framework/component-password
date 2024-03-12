@@ -21,40 +21,40 @@ namespace Eureka\Component\Password;
 class StringGenerator
 {
     /** @const A Bit for uppercase letters */
-    const CHAR_UPPER = 1;
+    public const CHAR_UPPER = 1;
 
     /** @const A Bit for lowercase letters */
-    const CHAR_LOWER = 2;
+    public const CHAR_LOWER = 2;
 
     /** @const Bits (sum) for alpha characters (combines UPPER + LOWER) */
-    const CHAR_ALPHA = 3; // CHAR_UPPER | CHAR_LOWER
+    public const CHAR_ALPHA = 3; // CHAR_UPPER | CHAR_LOWER
 
     /** @const A Bit for digits */
-    const CHAR_DIGITS = 4;
+    public const CHAR_DIGITS = 4;
 
     /** @const Bits (sum) for alphanumeric characters */
-    const CHAR_ALNUM = 7; // CHAR_ALPHA | CHAR_DIGITS
+    public const CHAR_ALNUM = 7; // CHAR_ALPHA | CHAR_DIGITS
 
     /** @const Bits (sum) for uppercase hexadecimal symbols */
-    const CHAR_UPPER_HEX = 12; // 8 | CHAR_DIGITS
+    public const CHAR_UPPER_HEX = 12; // 8 | CHAR_DIGITS
 
     /** @const Bits (sum)  for lowercase hexadecimal symbols */
-    const CHAR_LOWER_HEX = 20; // 16 | CHAR_DIGITS
+    public const CHAR_LOWER_HEX = 20; // 16 | CHAR_DIGITS
 
     /** @const Bits (sum) for base64 symbols */
-    const CHAR_BASE64 = 39; // 32 | CHAR_ALNUM
+    public const CHAR_BASE64 = 39; // 32 | CHAR_ALNUM
 
     /** @const A Bit for additional symbols accessible via the keyboard */
-    const CHAR_SYMBOLS = 64;
+    public const CHAR_SYMBOLS = 64;
 
     /** @const A Bit for brackets */
-    const CHAR_BRACKETS = 128;
+    public const CHAR_BRACKETS = 128;
 
     /** @const A Bit for punctuation marks */
-    const CHAR_PUNCT = 256;
+    public const CHAR_PUNCT = 256;
 
     /** @const Bitwise for upper/lower-case and digits but without "B8G6I1l|0OQDS5Z2" */
-    const REMOVE_AMBIGUOUS_CHARS = 65536;
+    public const REMOVE_AMBIGUOUS_CHARS = 65536;
 
     /** @const string Ambiguous characters for "Easy To Read" sets*/
     private const AMBIGUOUS_CHARS = 'B8G6I1l|0OQDS5Z2()[]{}:;,.';
@@ -62,7 +62,7 @@ class StringGenerator
     /**
      * @var string[] The different characters, by Flag
      */
-    const STRING_LIST = [
+    public const STRING_LIST = [
         self::CHAR_UPPER     => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
         self::CHAR_LOWER     => 'abcdefghijklmnopqrstuvwxyz',
         self::CHAR_DIGITS    => '0123456789',
@@ -95,11 +95,11 @@ class StringGenerator
     public function generateFromChars(int $length, string $chars): string
     {
         /** @var int<0,max> $max */
-        $max    = max(((int) mb_strlen($chars)) - 1, 0); // Min 0, to avoid \Error when $max is -1
+        $max    = \max(((int) \mb_strlen($chars)) - 1, 0); // Min 0, to avoid \Error when $max is -1
         $string = '';
 
         for ($i = 0; $i < $length; $i++) {
-            $char = random_int(0, $max);
+            $char = \random_int(0, $max);
             $string .= $chars[$char];
         }
 
@@ -123,10 +123,10 @@ class StringGenerator
         }
 
         if ($removeAmbiguousChars) {
-            $string = str_replace(str_split(self::AMBIGUOUS_CHARS), '', $string);
+            $string = \str_replace(\str_split(self::AMBIGUOUS_CHARS), '', $string);
         }
 
         //~ Return string with unique chars
-        return (string) count_chars($string, 3);
+        return (string) \count_chars($string, 3);
     }
 }

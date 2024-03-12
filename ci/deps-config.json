@@ -1,0 +1,8 @@
+{
+  "symbol-whitelist": [
+    "Eureka\\Component\\Console\\AbstractScript",
+    "Eureka\\Component\\Console\\Help",
+    "Eureka\\Component\\Console\\Option\\Option",
+    "Eureka\\Component\\Console\\Option\\Options"
+  ]
+}

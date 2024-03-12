@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Eureka\Component\Password\Tests;
+namespace Eureka\Component\Password\Tests\Unit;
 
 use Eureka\Component\Password\Password;
 use PHPUnit\Framework\TestCase;

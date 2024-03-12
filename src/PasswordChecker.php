@@ -11,11 +11,6 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Password;
 
-/**
- * Password checker class.
- *
- * @author Romain Cottard
- */
 class PasswordChecker
 {
     /**
