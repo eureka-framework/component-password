@@ -11,20 +11,9 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Password;
 
-/**
- * Password generator class.
- *
- * @author Romain Cottard
- */
 class PasswordGenerator
 {
-    private StringGenerator $generator;
-
-    public function __construct(
-        StringGenerator $generator
-    ) {
-        $this->generator = $generator;
-    }
+    public function __construct(private readonly StringGenerator $generator) {}
 
     /**
      * Generate password of given length.
@@ -76,7 +65,7 @@ class PasswordGenerator
 
         if ($alpha > 0) {
             $chars .= $this->generator->generate(
-                (int) ceil($alpha * $weight),
+                (int) \ceil($alpha * $weight),
                 StringGenerator::CHAR_ALPHA,
                 $removeAmbiguousChars
             );
@@ -84,7 +73,7 @@ class PasswordGenerator
 
         if ($numeric > 0) {
             $chars .= $this->generator->generate(
-                (int) ceil($numeric * $weight),
+                (int) \ceil($numeric * $weight),
                 StringGenerator::CHAR_DIGITS,
                 $removeAmbiguousChars
             );
@@ -92,26 +81,27 @@ class PasswordGenerator
 
         if ($other > 0) {
             $chars .= $this->generator->generate(
-                (int) ceil($other * $weight),
+                (int) \ceil($other * $weight),
                 StringGenerator::CHAR_SYMBOLS,
                 $removeAmbiguousChars
             );
         }
 
-        return substr($this->secureShuffle($chars), 0, $length);
+        return \substr($this->secureShuffle($chars), 0, $length);
     }
 
     /**
      * Secure shuffling using Fisher and Yates method (Durstenfeld implementation)
      *
      * @see    https://en.wikipedia.org/wiki/Fisher–Yates_shuffle
-     * @param  string $chars
+     * @throws \Exception
+     * @param string $chars
      * @return string
      */
     private function secureShuffle(string $chars): string
     {
-        for ($i = strlen($chars) - 1; $i >= 1; --$i) {
-            $j = random_int(0, $i);
+        for ($i = \strlen($chars) - 1; $i >= 1; --$i) {
+            $j = \random_int(0, $i);
 
             // Exchange i and j characters
             $temp      = $chars[$j];

@@ -19,10 +19,6 @@ namespace Eureka\Component\Password;
  */
 class Password
 {
-    /** @var string $password Plain text password */
-    protected string $password;
-
-    /** @var string $passwordHashed Hashed password */
     protected string $passwordHashed = '';
 
     /**
@@ -30,10 +26,8 @@ class Password
      *
      * @param string $password
      */
-    public function __construct(string $password)
+    public function __construct(private readonly string $password)
     {
-        $this->password = $password;
-
         $this->hash();
     }
 
@@ -61,14 +55,14 @@ class Password
      * Hash the password.
      *
      * @return $this
-     * @throws \RuntimeException
+     * @throws \UnexpectedValueException
      */
     public function hash(): self
     {
-        $hash = password_hash($this->password, PASSWORD_BCRYPT);
+        $hash = \password_hash($this->password, PASSWORD_BCRYPT);
 
         if (empty($hash)) {
-            throw new \RuntimeException('Cannot hash password!'); // @codeCoverageIgnore
+            throw new \UnexpectedValueException('Cannot hash password!'); // @codeCoverageIgnore
         }
 
         $this->passwordHashed = $hash;
@@ -84,6 +78,6 @@ class Password
      */
     public function verify(string $passwordHashed): bool
     {
-        return password_verify($this->password, $passwordHashed);
+        return \password_verify($this->password, $passwordHashed);
     }
 }
