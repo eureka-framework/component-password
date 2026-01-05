@@ -31,7 +31,7 @@ class PasswordGenerator
         float $alpha = 0.6,
         float $numeric = 0.2,
         float $other = 0.2,
-        bool $removeAmbiguousChars = true
+        bool $removeAmbiguousChars = true,
     ): Password {
         return new Password($this->generateString($length, $alpha, $numeric, $other, $removeAmbiguousChars));
     }
@@ -52,7 +52,7 @@ class PasswordGenerator
         float $alpha = 0.6,
         float $numeric = 0.2,
         float $other = 0.2,
-        bool $removeAmbiguousChars = true
+        bool $removeAmbiguousChars = true,
     ): string {
 
         if ($length <= 0 || $alpha < 0 || $numeric < 0 || $other < 0 || ($alpha + $numeric + $other) < 0.5) {
@@ -67,7 +67,7 @@ class PasswordGenerator
             $chars .= $this->generator->generate(
                 (int) \ceil($alpha * $weight),
                 StringGenerator::CHAR_ALPHA,
-                $removeAmbiguousChars
+                $removeAmbiguousChars,
             );
         }
 
@@ -75,7 +75,7 @@ class PasswordGenerator
             $chars .= $this->generator->generate(
                 (int) \ceil($numeric * $weight),
                 StringGenerator::CHAR_DIGITS,
-                $removeAmbiguousChars
+                $removeAmbiguousChars,
             );
         }
 
@@ -83,7 +83,7 @@ class PasswordGenerator
             $chars .= $this->generator->generate(
                 (int) \ceil($other * $weight),
                 StringGenerator::CHAR_SYMBOLS,
-                $removeAmbiguousChars
+                $removeAmbiguousChars,
             );
         }
 
