@@ -17,11 +17,7 @@ use Eureka\Component\Password\PasswordGenerator;
 use Eureka\Component\Password\StringGenerator;
 
 /**
- * Console Abstraction class.
- * Must be parent class for every console script class.
- *
- * @author  Romain Cottard
- *
+ * Sample script to generate password
  * @codeCoverageIgnore
  */
 class Generator extends Console\AbstractScript

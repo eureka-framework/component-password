@@ -21,13 +21,6 @@ use PHPUnit\Framework\TestCase;
  */
 class PasswordTest extends TestCase
 {
-    public function testICanInstantiatePasswordClass(): void
-    {
-        $password = new Password('SomeSecretPassword1!');
-
-        $this->assertInstanceOf(Password::class, $password);
-    }
-
     public function testICanRetrievePlainPasswordFromPasswordInstance(): void
     {
         $password = new Password('SomeSecretPassword1!');

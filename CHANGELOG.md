@@ -16,6 +16,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ```
 ----
 
+## [6.0.0] - 2026-01-05
+[6.0.0]: https://github.com/eureka-framework/component-password/compare/5.0.0...6.0.0
+### Added
+- Add support of PHP 8.3+
+- Add shipmonk dependency checker
+### Removed
+- Drop PHP 8.1 & 8.2 support
+- Remove maglnet dependency checker
+### Changed
+- Code style fixes
+- Dev dependencies upgrade
+- Update Makefile
+- Update CI config
+
+----
+
 ## [5.0.0] - 2023-06-14
 [5.0.0]: https://github.com/eureka-framework/component-password/compare/4.2.0...5.0.0
 ### Changed
